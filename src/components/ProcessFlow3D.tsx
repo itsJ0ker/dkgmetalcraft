@@ -56,10 +56,10 @@ export default function ProcessFlow3D() {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 items-stretch bg-[var(--bg-panel)] border border-[var(--color-border)] shadow-2xl p-6 md:p-8 rounded-lg">
+        <div className="flex flex-col lg:flex-row gap-4 md:gap-8 items-stretch bg-[var(--bg-panel)] border border-[var(--color-border)] shadow-2xl p-4 md:p-8 rounded-lg">
           
           {/* Visual Showcase Area */}
-          <div className="w-full lg:w-2/3 min-h-[350px] bg-[var(--bg-dark)] relative border border-[var(--color-border)] overflow-hidden flex flex-col justify-center items-center p-8 rounded-md group">
+          <div className="w-full lg:w-2/3 min-h-[250px] md:min-h-[350px] bg-[var(--bg-dark)] relative border border-[var(--color-border)] overflow-hidden flex flex-col justify-center items-center p-6 pb-16 md:p-8 md:pb-8 rounded-md group">
             <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-orange)]/5 via-transparent to-transparent"></div>
             
             {/* Animated Industrial Box Indicator */}
@@ -87,7 +87,7 @@ export default function ProcessFlow3D() {
               <button
                 key={s.id}
                 onClick={() => setStep(s.id)}
-                className={`text-left p-5 transition-all duration-300 relative group border-b border-[var(--color-border)]/50 last:border-0 cursor-pointer ${
+                className={`text-left p-4 md:p-5 transition-all duration-300 relative group border-b border-[var(--color-border)]/50 last:border-0 cursor-pointer ${
                   step === s.id 
                     ? 'bg-[var(--color-orange-glow)]' 
                     : 'hover:bg-[var(--bg-panel-light)]'

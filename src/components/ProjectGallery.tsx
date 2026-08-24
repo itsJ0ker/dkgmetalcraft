@@ -45,7 +45,7 @@ export default function ProjectGallery() {
     <section className="py-24 bg-[var(--bg-panel)] relative">
       <div className="max-w-7xl mx-auto px-6">
         
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-12 gap-4 md:gap-6">
           <div>
             <h2 className="font-heading text-4xl md:text-5xl text-[var(--text-white)] uppercase tracking-tight font-bold mb-2">
               Our <span className="text-[var(--color-orange)]">Work</span>
@@ -75,7 +75,7 @@ export default function ProjectGallery() {
         {/* Masonry-like CSS Grid */}
         <div 
           ref={galleryRef}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[250px]"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-[200px] md:auto-rows-[250px]"
         >
           {filteredProjects.map((project) => (
             <div 
@@ -83,7 +83,7 @@ export default function ProjectGallery() {
               className={`gallery-card group relative overflow-hidden bg-[var(--bg-dark)] border border-[var(--color-border)] hover:border-[var(--color-orange)] transition-colors duration-500 cursor-pointer ${
                 project.aspect === 'aspect-video' ? 'md:col-span-2' : ''
               } ${
-                project.aspect === 'aspect-[3/4]' ? 'row-span-2' : ''
+                project.aspect === 'aspect-[3/4]' ? 'md:row-span-2' : ''
               }`}
             >
               <img 

@@ -208,6 +208,13 @@ export default function Hero({ onExplore }: HeroProps) {
           </span>
         </div>
 
+        {/* Brand Name Logo Text */}
+        <div className="hero-fade-in mb-4">
+          <h2 className="font-heading text-xl md:text-3xl tracking-[0.4em] text-[var(--text-white)] uppercase font-bold">
+            DKG <span className="text-[var(--color-orange)]">Metalcraft</span>
+          </h2>
+        </div>
+
         {/* Hero Title */}
         <h1 className="hero-title font-heading text-4xl sm:text-5xl md:text-8xl font-bold tracking-tight text-[var(--text-white)] mb-6 uppercase leading-none">
           Precision in <br />

@@ -67,10 +67,14 @@ export default function Navbar({ activeTab, setActiveTab, theme, setTheme }: Nav
       <div className="container mx-auto px-4 flex justify-between items-center w-full">
         {/* Logo */}
         <div 
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-4 cursor-pointer group"
           onClick={() => handleNavClick('home')}
         >
           <img src="/assets/logo.png" alt="DKG Metal Craft Logo" className="h-12 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105" />
+          <div className="hidden sm:flex flex-col">
+            <span className="font-heading text-xl md:text-2xl font-bold tracking-tight text-[var(--text-white)] leading-none uppercase">DKG <span className="text-[var(--color-orange)]">Metalcraft</span></span>
+            <span className="font-sans text-[10px] md:text-xs text-[var(--text-steel)] tracking-widest uppercase mt-1">Private Limited</span>
+          </div>
         </div>
 
         {/* Desktop Navigation */}

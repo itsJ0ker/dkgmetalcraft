@@ -1,0 +1,129 @@
+import { Mail, Phone, MapPin, ShieldAlert, Award } from 'lucide-react';
+
+interface FooterProps {
+  setActiveTab: (tab: string) => void;
+}
+
+export default function Footer({ setActiveTab }: FooterProps) {
+  const currentYear = new Date().getFullYear();
+
+  return (
+    <footer className="bg-[var(--bg-dark)] border-t border-[var(--color-border)] pt-16 pb-8 text-[var(--text-steel)] relative overflow-hidden">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-grid opacity-10 pointer-events-none"></div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
+          {/* Brand Info */}
+          <div>
+            <div className="mb-6">
+              <img src="/assets/logo.png" alt="DKG Metal Craft Logo" className="h-10 w-auto object-contain" />
+            </div>
+            <p className="text-sm mb-6 leading-relaxed">
+              Trusted manufacturer of commercial kitchen equipment, stainless steel products, and customized metal fabrication. Combining precision engineering and skilled craftsmanship.
+            </p>
+            <div className="flex items-center gap-3 text-xs text-[var(--color-orange)]">
+              <Award className="w-4 h-4" />
+              <span className="font-heading tracking-wider uppercase">ISO 9001:2015 Certified Manufacturing</span>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="font-heading text-[var(--text-white)] text-xs font-bold tracking-[0.2em] uppercase mb-4">
+              Sections
+            </h3>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <button 
+                  onClick={() => { setActiveTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[var(--text-white)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0"
+                >
+                  The Forge (Home)
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { setActiveTab('capabilities'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[var(--text-white)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0"
+                >
+                  Capabilities
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { setActiveTab('catalog'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[var(--text-white)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0"
+                >
+                  Product Catalog
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { setActiveTab('about'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[var(--text-white)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0"
+                >
+                  Story & Quality
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { setActiveTab('contact'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[var(--text-white)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0"
+                >
+                  Get a Quote (Contact)
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Details */}
+          <div>
+            <h3 className="font-heading text-[var(--text-white)] text-xs font-bold tracking-[0.2em] uppercase mb-4">
+              Headquarters
+            </h3>
+            <ul className="space-y-4 text-sm">
+              <li className="flex gap-3 items-start">
+                <MapPin className="w-5 h-5 text-[var(--color-orange)] shrink-0 mt-0.5" />
+                <span>
+                  Kh. No. 93/24, Ground Floor, Plot No. 24, Village Mundka, New Delhi-110041, India
+                </span>
+              </li>
+              <li className="flex gap-3 items-center">
+                <Phone className="w-5 h-5 text-[var(--color-orange)] shrink-0" />
+                <div className="flex flex-col">
+                  <a href="tel:+919899592920" className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] text-decoration-none">
+                    +91-9899592920
+                  </a>
+                  <a href="tel:+919873667806" className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] text-decoration-none">
+                    +91-9873667806
+                  </a>
+                  <a href="tel:01145019426" className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] text-decoration-none">
+                    011 45019426
+                  </a>
+                </div>
+              </li>
+              <li className="flex gap-3 items-center">
+                <Mail className="w-5 h-5 text-[var(--color-orange)] shrink-0" />
+                <a href="mailto:dkgmetalcraft@gmail.com" className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] text-decoration-none">
+                  dkgmetalcraft@gmail.com
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-8 border-t border-[var(--color-border-light)] flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+          <div>
+            &copy; {currentYear} DKG Metal Craft Private Limited. All rights reserved.
+          </div>
+          <div className="flex items-center gap-2 text-[#444] text-[10px]">
+            <ShieldAlert className="w-3 h-3" />
+            <span>Precision Manufactured in New Delhi, India</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Hero from './components/Hero';
 import Home from './components/Home';
 import Capabilities from './components/Capabilities';
 import Catalog from './components/Catalog';

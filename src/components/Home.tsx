@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { CheckCircle2, ChevronRight, Settings, Wrench, Shield, Zap, Layers, Cpu, Disc, Hammer } from 'lucide-react';
+import { CheckCircle2, ChevronRight, Settings, Shield, Zap, Layers, Cpu, Disc, Hammer } from 'lucide-react';
 import Hero from './Hero';
 import ProcessFlow3D from './ProcessFlow3D';
 import ProjectGallery from './ProjectGallery';

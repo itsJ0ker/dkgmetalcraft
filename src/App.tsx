@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { Analytics } from '@vercel/analytics/react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -254,6 +255,9 @@ export default function App() {
 
       {/* Global Footer */}
       <Footer setActiveTab={handleTabChange} />
+      
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }

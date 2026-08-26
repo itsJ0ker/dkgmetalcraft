@@ -10,12 +10,13 @@ export default function Catalog() {
   // Category tags mapping to catalog pages
   const categories = [
     { label: "ALL PAGES", pages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] },
-    { label: "WORK TABLES & CABINETS", pages: [2, 3] },
-    { label: "SINKS & WASHING", pages: [4] },
-    { label: "BAIN MARIES & WARMERS", pages: [5] },
-    { label: "DISPLAY COUNTERS", pages: [6, 7] },
-    { label: "COOKING & SERVICE", pages: [8, 10, 11] },
-    { label: "RACKS & TROLLEYS", pages: [9] }
+    { label: "COOKING RANGES", pages: [2, 3] },
+    { label: "CHAPATI & WASHERS", pages: [4] },
+    { label: "TABLES & RACKS", pages: [5] },
+    { label: "SINKS & TROLLEYS", pages: [6, 7] },
+    { label: "REFRIGERATION", pages: [7, 8] },
+    { label: "OVENS & PROOFERS", pages: [9, 10] },
+    { label: "FRYERS & GRILLERS", pages: [11] }
   ];
 
   const [activeCategory, setActiveCategory] = useState(0);

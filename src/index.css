@@ -314,3 +314,14 @@ h1, h2, h3, h4, h5, h6 {
     height: 80vh;
   }
 }
+
+@keyframes spark-shoot {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(0, -60px) scale(0);
+    opacity: 0;
+  }
+}

@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, ShieldAlert, Award } from 'lucide-react';
+import { Mail, Phone, MapPin, ShieldAlert, Award, Lock } from 'lucide-react';
 
 interface FooterProps {
   setActiveTab: (tab: string) => void;
@@ -109,6 +109,15 @@ export default function Footer({ setActiveTab }: FooterProps) {
                   className="hover:text-[var(--text-white)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0"
                 >
                   Get a Quote (Contact)
+                </button>
+              </li>
+              <li>
+                <button 
+                  onClick={() => { setActiveTab('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[var(--color-orange)] text-[var(--text-steel)] transition-colors duration-300 bg-transparent border-none cursor-pointer p-0 flex items-center gap-1.5"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  Admin Terminal
                 </button>
               </li>
             </ul>

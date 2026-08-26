@@ -8,6 +8,7 @@ import Catalog from './components/Catalog';
 import About from './components/About';
 import Contact from './components/Contact';
 import AIChatbot from './components/AIChatbot';
+import Dashboard from './components/Dashboard';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -15,7 +16,6 @@ export default function App() {
   const [theme, setTheme] = useState<'dark' | 'light' | 'colorful'>(() => (localStorage.getItem('dkg_theme') as 'dark' | 'light' | 'colorful') || 'dark');
   const shutterRef = useRef<HTMLDivElement>(null);
   const laserBeamRef = useRef<HTMLDivElement>(null);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const isTransitioningRef = useRef(false);
   const sparkCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -106,7 +106,6 @@ export default function App() {
   const handleTabChange = (newTab: string) => {
     if (newTab === displayTab || isTransitioningRef.current) return;
 
-    setIsTransitioning(true);
     isTransitioningRef.current = true;
     const shutter = shutterRef.current;
     const laser = laserBeamRef.current;
@@ -114,7 +113,6 @@ export default function App() {
     if (!shutter || !laser) {
       setDisplayTab(newTab);
       setActiveTab(newTab);
-      setIsTransitioning(false);
       isTransitioningRef.current = false;
       return;
     }
@@ -122,7 +120,6 @@ export default function App() {
     // GSAP Cinematic Laser Transition Timeline
     const tl = gsap.timeline({
       onComplete: () => {
-        setIsTransitioning(false);
         isTransitioningRef.current = false;
         gsap.set(laser, { opacity: 0 }); // Hide laser beam shadow completely when transition ends
         gsap.killTweensOf(laser); // Stop the flickering
@@ -201,6 +198,8 @@ export default function App() {
         return <About />;
       case 'contact':
         return <Contact />;
+      case 'dashboard':
+        return <Dashboard />;
       default:
         return <Home onExplore={() => handleTabChange('capabilities')} />;
     }

@@ -5,6 +5,8 @@ import { CheckCircle2, ChevronRight, Settings, Shield, Zap, Layers, Cpu, Disc, H
 import Hero from './Hero';
 import ProcessFlow3D from './ProcessFlow3D';
 import ProjectGallery from './ProjectGallery';
+import StatsSection from './StatsSection';
+
 gsap.registerPlugin(ScrollTrigger);
 
 interface HomeProps {
@@ -100,6 +102,9 @@ export default function Home({ onExplore }: HomeProps) {
       {/* 1. Hero Section */}
       <Hero onExplore={onExplore} />
 
+      {/* 1.5 Stats Section */}
+      <StatsSection />
+
       {/* 2. Machines & Capabilities Showcase */}
       <section className="py-24 bg-[var(--bg-panel)] relative overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-[0.03] pointer-events-none"></div>
@@ -123,7 +128,7 @@ export default function Home({ onExplore }: HomeProps) {
                 
                 <div className="w-full md:w-2/5 h-48 md:h-auto overflow-hidden relative">
                   <div className="absolute inset-0 bg-[var(--color-orange)]/20 mix-blend-overlay z-10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <img src={machine.img} alt={machine.title} className="w-full h-full object-cover md:grayscale md:opacity-70 group-hover:grayscale-0 group-hover:opacity-100 md:group-hover:scale-105 transition-all duration-700" />
+                  <img src={machine.img} alt={machine.title} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 md:group-hover:scale-105 transition-all duration-700" />
                 </div>
                 <div className="w-full md:w-3/5 p-6 md:p-8 flex flex-col justify-center">
                   <div className="text-[var(--color-orange)] mb-4">{machine.icon}</div>

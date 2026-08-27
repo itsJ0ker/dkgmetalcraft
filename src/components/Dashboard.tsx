@@ -171,6 +171,7 @@ export default function Dashboard() {
 
   // Live statistics state
   const [stats, setStats] = useState(() => getAnalyticsSummary());
+  const [viewMode, setViewMode] = useState<'session' | 'combined'>('session');
 
   // Listen to new events in real-time
   useEffect(() => {
@@ -195,9 +196,11 @@ export default function Dashboard() {
     });
   };
 
+  const activeStats = viewMode === 'session' ? stats.sessionStats : stats;
+
   // Max value in traffic to scale it properly
-  const maxViews = Math.max(...stats.weeklyTraffic.map(t => t.views), 1800);
-  const chartPoints = stats.weeklyTraffic.map((t, idx) => {
+  const maxViews = Math.max(...activeStats.weeklyTraffic.map(t => t.views), viewMode === 'session' ? 5 : 1800);
+  const chartPoints = activeStats.weeklyTraffic.map((t, idx) => {
     const x = 10 + idx * 50;
     // Map view count to range [20, 130] in SVG coordinates (150 is bottom, 0 is top)
     const y = 130 - ((t.views / maxViews) * 100);
@@ -312,6 +315,40 @@ export default function Dashboard() {
           <div className="lg:col-span-9 bg-[var(--bg-panel)] border border-[var(--color-border)] p-6 md:p-8 shadow-sm relative min-h-[500px]">
             <div className="absolute top-0 right-0 w-[4px] h-[4px] bg-[#ff5200]"></div>
             
+            {/* Console Data Stream Toggle */}
+            {(activeSubTab === 'overview' || activeSubTab === 'analytics') && (
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-[var(--bg-dark)] border border-[var(--color-border)] p-3 mb-6 gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-ping"></span>
+                  <span className="text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase font-bold">
+                    CONSOLE DATA STREAM: {viewMode === 'session' ? 'LIVE SESSION RUNTIME' : 'AGGREGATED METRICS'}
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setViewMode('session')}
+                    className={`px-3 py-1.5 text-[9px] font-heading tracking-widest border transition-all cursor-pointer ${
+                      viewMode === 'session'
+                        ? 'border-[var(--color-orange)] bg-[var(--color-orange)]/15 text-[var(--color-orange)] font-bold shadow-[0_0_10px_var(--color-orange-glow)]'
+                        : 'border-[var(--color-border)] text-[var(--text-steel)] hover:text-white hover:bg-[var(--bg-dark)]'
+                    }`}
+                  >
+                    LIVE SESSION ONLY
+                  </button>
+                  <button
+                    onClick={() => setViewMode('combined')}
+                    className={`px-3 py-1.5 text-[9px] font-heading tracking-widest border transition-all cursor-pointer ${
+                      viewMode === 'combined'
+                        ? 'border-[var(--color-orange)] bg-[var(--color-orange)]/15 text-[var(--color-orange)] font-bold shadow-[0_0_10px_var(--color-orange-glow)]'
+                        : 'border-[var(--color-border)] text-[var(--text-steel)] hover:text-white hover:bg-[var(--bg-dark)]'
+                    }`}
+                  >
+                    COMBINED HISTORICAL BASELINE
+                  </button>
+                </div>
+              </div>
+            )}
+            
             {/* SUBTAB 1: OVERVIEW DIAGNOSTIC */}
             {activeSubTab === 'overview' && (
               <div className="space-y-8 animate-fadeIn">
@@ -329,26 +366,26 @@ export default function Dashboard() {
                   
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">TOTAL TRAFFIC SESSION</span>
-                    <span className="text-2xl font-bold font-heading text-white">{stats.sessions.toLocaleString()}</span>
+                    <span className="text-2xl font-bold font-heading text-white">{activeStats.sessions.toLocaleString()}</span>
                     <span className="text-[9px] font-mono text-green-500 block mt-2">+12.4% MONTH-OVER-MONTH</span>
                   </div>
 
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">PAGE VIEW HITS</span>
-                    <span className="text-2xl font-bold font-heading text-white">{stats.pageViews.toLocaleString()}</span>
+                    <span className="text-2xl font-bold font-heading text-white">{activeStats.pageViews.toLocaleString()}</span>
                     <span className="text-[9px] font-mono text-[var(--color-orange)] block mt-2">2.18x ACCELERATION VALUE</span>
                   </div>
 
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">QUOTE SUBMISSION RATE</span>
-                    <span className="text-2xl font-bold font-heading text-white">{((stats.quotes / stats.sessions) * 100).toFixed(1)}%</span>
-                    <span className="text-[9px] font-mono text-green-500 block mt-2">{stats.quotes} BLUEPRINTS TOTAL</span>
+                    <span className="text-2xl font-bold font-heading text-white">{activeStats.sessions > 0 ? ((activeStats.quotes / activeStats.sessions) * 100).toFixed(1) : '0.0'}%</span>
+                    <span className="text-[9px] font-mono text-green-500 block mt-2">{activeStats.quotes} BLUEPRINTS TOTAL</span>
                   </div>
 
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">CATALOG DOWNLOADS</span>
-                    <span className="text-2xl font-bold font-heading text-white">{stats.downloads}</span>
-                    <span className="text-[9px] font-mono text-[var(--color-orange)] block mt-2">{((stats.downloads / stats.pageViews) * 100).toFixed(0)}% CLICK-THROUGH CONVERSION</span>
+                    <span className="text-2xl font-bold font-heading text-white">{activeStats.downloads}</span>
+                    <span className="text-[9px] font-mono text-[var(--color-orange)] block mt-2">{activeStats.pageViews > 0 ? ((activeStats.downloads / activeStats.pageViews) * 100).toFixed(0) : '0'}% CLICK-THROUGH CONVERSION</span>
                   </div>
 
                 </div>
@@ -452,7 +489,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="flex justify-between text-[9px] font-heading text-[var(--text-steel)] mt-4 uppercase">
-                      {stats.weeklyTraffic.map((t, idx) => <span key={idx}>{t.day}</span>)}
+                      {activeStats.weeklyTraffic.map((t, idx) => <span key={idx}>{t.day}</span>)}
                     </div>
                   </div>
 
@@ -463,7 +500,7 @@ export default function Dashboard() {
                     </span>
 
                     <div className="space-y-3">
-                      {stats.clickData.map((item, idx) => (
+                      {activeStats.clickData.map((item, idx) => (
                         <div key={idx} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-mono">
                             <span className="text-[var(--text-white)]">{item.name}</span>

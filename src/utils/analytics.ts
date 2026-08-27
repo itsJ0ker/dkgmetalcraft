@@ -90,6 +90,14 @@ export interface AnalyticsSummary {
   weeklyTraffic: Array<{ day: string; views: number; users: number }>;
   clickData: Array<{ name: string; clicks: number; percent: number }>;
   recentLogs: LocalEvent[];
+  sessionStats: {
+    sessions: number;
+    pageViews: number;
+    quotes: number;
+    downloads: number;
+    weeklyTraffic: Array<{ day: string; views: number; users: number }>;
+    clickData: Array<{ name: string; clicks: number; percent: number }>;
+  };
 }
 
 export function getAnalyticsSummary(): AnalyticsSummary {
@@ -141,6 +149,40 @@ export function getAnalyticsSummary(): AnalyticsSummary {
     percent: grandTotalClicks > 0 ? Math.round((item.clicks / grandTotalClicks) * 100) : 0
   }));
 
+  // Pure session stats
+  const sessionWeeklyTraffic = [
+    { day: 'Mon', views: 0, users: 0 },
+    { day: 'Tue', views: 0, users: 0 },
+    { day: 'Wed', views: 0, users: 0 },
+    { day: 'Thu', views: 0, users: 0 },
+    { day: 'Fri', views: 0, users: 0 },
+    { day: 'Sat', views: 0, users: 0 },
+    { day: 'Sun', views: 0, users: 0 },
+  ].map(t => {
+    if (t.day === todayName) {
+      return {
+        day: t.day,
+        views: localPageViews,
+        users: Math.max(1, localSessions)
+      };
+    }
+    return t;
+  });
+
+  const sessionClicks = [
+    { name: 'Laser Cutting Preview', clicks: laserClicks },
+    { name: 'Inquiry Blueprint Submits', clicks: localQuotes },
+    { name: 'Bending Machine Preview', clicks: bendingClicks },
+    { name: 'Product Catalog PDFs', clicks: pdfDownloads },
+    { name: 'Footer Social Contacts', clicks: socialClicks + otherCapabilityClicks }
+  ];
+
+  const sessionGrandTotal = sessionClicks.reduce((sum, item) => sum + item.clicks, 0);
+  const sessionClickData = sessionClicks.map(item => ({
+    ...item,
+    percent: sessionGrandTotal > 0 ? Math.round((item.clicks / sessionGrandTotal) * 100) : 0
+  }));
+
   return {
     sessions: totalSessions,
     pageViews: totalPageViews,
@@ -148,6 +190,14 @@ export function getAnalyticsSummary(): AnalyticsSummary {
     downloads: totalDownloads,
     weeklyTraffic,
     clickData,
-    recentLogs: events
+    recentLogs: events,
+    sessionStats: {
+      sessions: Math.max(1, localSessions),
+      pageViews: localPageViews,
+      quotes: localQuotes,
+      downloads: localDownloads,
+      weeklyTraffic: sessionWeeklyTraffic,
+      clickData: sessionClickData
+    }
   };
 }

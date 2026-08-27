@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Layers, Zap, Hammer, Activity, Disc, Cpu } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -128,7 +129,10 @@ export default function Capabilities() {
             {capabilities.map((cap, index) => (
               <div
                 key={index}
-                onClick={() => setActiveCap(index)}
+                onClick={() => {
+                  setActiveCap(index);
+                  trackEvent('process_preview_click', { category: 'Capability Card', title: cap.title });
+                }}
                 className={`capability-card card-industrial cursor-pointer ${
                   activeCap === index 
                     ? 'border-[var(--color-orange)] shadow-[0_0_15px_rgba(255,82,0,0.15)] bg-[var(--bg-panel)]' 

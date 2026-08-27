@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Calculator, Send, CheckCircle2 } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -34,18 +35,55 @@ export default function Contact() {
         // add structure factor
         const totalEst = Math.round(topWeight * 2.2);
         setEstimatedWeight(totalEst);
+        trackEvent('estimator_calculation', {
+          source: 'Contact Form Estimator',
+          category: formData.category,
+          length: l,
+          width: w,
+          estimatedWeight: totalEst
+        });
       } else {
         setEstimatedWeight(null);
       }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    trackEvent('blueprint_submit', {
+      category: formData.category,
+      ssGrade: formData.ssGrade,
+      estimatedWeight: estimatedWeight || 'N/A'
+    });
+
+    const web3Key = import.meta.env.VITE_WEB3FORMS_KEY;
+    if (web3Key) {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: web3Key,
+            subject: `New DKG MetalCraft Blueprint from ${formData.name}`,
+            from_name: 'DKG Website Blueprint',
+            ...formData,
+            estimatedWeight: estimatedWeight ? `${estimatedWeight} KG` : 'Not calculated'
+          })
+        });
+        const result = await response.json();
+        if (result.success) {
+          console.log('Blueprint emailed successfully via Web3Forms');
+        }
+      } catch (err) {
+        console.error('Failed to email blueprint via Web3Forms:', err);
+      }
+    }
+
     setSubmitted(true);
-    setTimeout(() => {
-      // simulated reset
-    }, 5000);
   };
 
   return (

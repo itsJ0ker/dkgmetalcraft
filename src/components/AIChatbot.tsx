@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { MessageSquare, X, Send } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 interface Message {
   sender: 'bot' | 'user';
@@ -65,6 +66,8 @@ ${catalogText}
 
   const submitQuestion = async (text: string) => {
     if (!text.trim()) return;
+
+    trackEvent('chatbot_query', { query: text });
 
     const newMsg: Message = { sender: 'user', text, timestamp: new Date() };
     const updatedMessages = [...messages, newMsg];

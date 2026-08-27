@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Download, ZoomIn, ChevronLeft, ChevronRight, X, Eye } from 'lucide-react';
 import { gsap } from 'gsap';
+import { trackEvent } from '../utils/analytics';
 
 export default function Catalog() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -30,6 +31,8 @@ export default function Catalog() {
 
   const handleCategoryClick = (catIndex: number) => {
     setActiveCategory(catIndex);
+    const categoryLabel = categories[catIndex].label;
+    trackEvent('process_preview_click', { category: 'Catalog Filter', title: categoryLabel });
     const pages = categories[catIndex].pages;
     if (!pages.includes(currentPage)) {
       setCurrentPage(pages[0]);
@@ -70,6 +73,7 @@ export default function Catalog() {
             <a 
               href="/assets/METALCRAFT CATALOG FINAL.pdf" 
               download="DKG_Metal_Craft_Catalog.pdf"
+              onClick={() => trackEvent('catalog_download', { file: 'METALCRAFT CATALOG FINAL.pdf' })}
               className="btn-industrial btn-industrial-primary flex items-center justify-center gap-3 w-full md:w-auto"
             >
               <Download className="w-4 h-4" />

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Lock, Unlock, Eye, BarChart3, Mail, ShieldAlert, Calculator, Activity, LogOut, Settings } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Lock, Unlock, Eye, BarChart3, Mail, ShieldAlert, Calculator, Activity, LogOut, Settings, CheckCircle2 } from 'lucide-react';
+import { getAnalyticsSummary, trackEvent } from '../utils/analytics';
 
 // Live pricing rates (INR per KG approx) for SS grades
 const STEEL_PRICES: Record<string, number> = {
@@ -168,24 +169,41 @@ export default function Dashboard() {
     );
   }
 
-  // MOCKED ANALYTICS DATA (FOR VISUALS)
-  const trafficHistory = [
-    { day: 'Mon', views: 840, users: 410 },
-    { day: 'Tue', views: 1120, users: 580 },
-    { day: 'Wed', views: 1450, users: 790 },
-    { day: 'Thu', views: 1210, users: 620 },
-    { day: 'Fri', views: 1680, users: 950 },
-    { day: 'Sat', views: 980, users: 500 },
-    { day: 'Sun', views: 1350, users: 690 },
-  ];
+  // Live statistics state
+  const [stats, setStats] = useState(() => getAnalyticsSummary());
 
-  const clickData = [
-    { name: 'Laser Cutting Preview', clicks: 420, percent: 35 },
-    { name: 'Inquiry Blueprint Submits', clicks: 280, percent: 23 },
-    { name: 'Bending Machine Preview', clicks: 240, percent: 20 },
-    { name: 'Product Catalog PDFs', clicks: 180, percent: 15 },
-    { name: 'Footer Social Contacts', clicks: 80, percent: 7 },
-  ];
+  // Listen to new events in real-time
+  useEffect(() => {
+    const handleUpdate = () => {
+      setStats(getAnalyticsSummary());
+    };
+    window.addEventListener('dkg_analytics_update', handleUpdate);
+    return () => window.removeEventListener('dkg_analytics_update', handleUpdate);
+  }, []);
+
+  const handleEstimateTrack = () => {
+    trackEvent('estimator_calculation', {
+      source: 'Admin Estimator Tab',
+      category: estCategory,
+      ssGrade: estGrade,
+      length: parseFloat(estLength) || 0,
+      width: parseFloat(estWidth) || 0,
+      height: parseFloat(estHeight) || 0,
+      underShelves: estUnderShelves,
+      estimatedWeight: calculatedWeight,
+      estimatedCost: calculatedCost
+    });
+  };
+
+  // Max value in traffic to scale it properly
+  const maxViews = Math.max(...stats.weeklyTraffic.map(t => t.views), 1800);
+  const chartPoints = stats.weeklyTraffic.map((t, idx) => {
+    const x = 10 + idx * 50;
+    // Map view count to range [20, 130] in SVG coordinates (150 is bottom, 0 is top)
+    const y = 130 - ((t.views / maxViews) * 100);
+    return { x, y, ...t };
+  });
+  const pathD = chartPoints.map((p, idx) => `${idx === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
 
 
 
@@ -311,26 +329,26 @@ export default function Dashboard() {
                   
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">TOTAL TRAFFIC SESSION</span>
-                    <span className="text-2xl font-bold font-heading text-white">14,840</span>
+                    <span className="text-2xl font-bold font-heading text-white">{stats.sessions.toLocaleString()}</span>
                     <span className="text-[9px] font-mono text-green-500 block mt-2">+12.4% MONTH-OVER-MONTH</span>
                   </div>
 
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">PAGE VIEW HITS</span>
-                    <span className="text-2xl font-bold font-heading text-white">32,490</span>
+                    <span className="text-2xl font-bold font-heading text-white">{stats.pageViews.toLocaleString()}</span>
                     <span className="text-[9px] font-mono text-[var(--color-orange)] block mt-2">2.18x ACCELERATION VALUE</span>
                   </div>
 
-                  <div className="bg-[var(--bg-dark)] border border(--color-border)] p-4 relative group">
+                  <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">QUOTE SUBMISSION RATE</span>
-                    <span className="text-2xl font-bold font-heading text-white">3.2%</span>
-                    <span className="text-[9px] font-mono text-green-500 block mt-2">475 BLUEPRINTS TOTAL</span>
+                    <span className="text-2xl font-bold font-heading text-white">{((stats.quotes / stats.sessions) * 100).toFixed(1)}%</span>
+                    <span className="text-[9px] font-mono text-green-500 block mt-2">{stats.quotes} BLUEPRINTS TOTAL</span>
                   </div>
 
                   <div className="bg-[var(--bg-dark)] border border-[var(--color-border)] p-4 relative group">
                     <span className="text-[8px] font-heading tracking-widest text-[var(--text-steel)] uppercase block mb-1">CATALOG DOWNLOADS</span>
-                    <span className="text-2xl font-bold font-heading text-white">842</span>
-                    <span className="text-[9px] font-mono text-[var(--color-orange)] block mt-2">64% CLICK-THROUGH CONVERSION</span>
+                    <span className="text-2xl font-bold font-heading text-white">{stats.downloads}</span>
+                    <span className="text-[9px] font-mono text-[var(--color-orange)] block mt-2">{((stats.downloads / stats.pageViews) * 100).toFixed(0)}% CLICK-THROUGH CONVERSION</span>
                   </div>
 
                 </div>
@@ -339,19 +357,50 @@ export default function Dashboard() {
                 <div className="border border-[var(--color-border)] bg-[var(--bg-dark)] p-4">
                   <div className="flex justify-between items-center border-b border-[var(--color-border-light)] pb-2 mb-3">
                     <span className="text-[10px] font-heading tracking-widest text-[var(--color-orange)] uppercase font-bold flex items-center gap-1.5">
-                      <Activity className="w-3.5 h-3.5" /> LIVE SESSION LOGSIM (SIMULATOR)
+                      <Activity className="w-3.5 h-3.5" /> LIVE SESSION LOG (FROM LOCAL & VERCEL ANALYTICS)
                     </span>
-                    <span className="text-[8px] font-mono text-[var(--text-steel)] uppercase">SPEED: 1.0s LOOP</span>
+                    <span className="text-[8px] font-mono text-[var(--text-steel)] uppercase">REALTIME MONITOR</span>
                   </div>
                   
-                  <div className="font-mono text-[10px] text-green-400/90 space-y-1.5 leading-relaxed max-h-[160px] overflow-y-auto pr-2">
-                    <p className="text-[var(--text-steel)]">[01:52:05] SYSTEM: Live Simulator initialized.</p>
-                    <p>&gt; IP 182.72.24.112 (Delhi) requested tab "Home". Response: 200 OK (85ms)</p>
-                    <p className="text-[var(--color-orange)]">&gt; Visitor triggered "500+ Customers" scroll trigger (count animation ran successfully).</p>
-                    <p>&gt; IP 223.189.44.89 (Gurugram) requested tab "Capabilities". Response: 200 OK (92ms)</p>
-                    <p className="text-yellow-400">&gt; Visitor downloaded "METALCRAFT CATALOG FINAL.pdf" (File size: 28.5 MB).</p>
-                    <p>&gt; IP 49.36.12.220 (Mumbai) requested tab "Contact". Response: 200 OK (80ms)</p>
-                    <p className="text-cyan-400">&gt; Live chatbot queried: "Provide price estimate for SS 304 commercial display counters".</p>
+                  <div className="font-mono text-[10px] text-green-400/90 space-y-1.5 leading-relaxed max-h-[220px] overflow-y-auto pr-2">
+                    {stats.recentLogs.length === 0 ? (
+                      <p className="text-[var(--text-steel)]">No browser interactions recorded yet. Click tabs or perform actions to see live events.</p>
+                    ) : (
+                      stats.recentLogs.map((log) => {
+                        const timeStr = new Date(log.timestamp).toLocaleTimeString();
+                        let details = '';
+                        let colorClass = 'text-green-400';
+                        if (log.name === 'page_view') {
+                          details = `Navigated to tab "${log.properties?.tab}"`;
+                          colorClass = 'text-cyan-400';
+                        } else if (log.name === 'catalog_download') {
+                          details = `Downloaded product catalog PDF ("${log.properties?.file}")`;
+                          colorClass = 'text-yellow-400';
+                        } else if (log.name === 'blueprint_submit') {
+                          details = `Submitted inquiry blueprint for "${log.properties?.category}" (${log.properties?.ssGrade})`;
+                          colorClass = 'text-pink-400 font-bold';
+                        } else if (log.name === 'chatbot_query') {
+                          details = `Query to AI Assistant: "${log.properties?.query}"`;
+                          colorClass = 'text-[var(--color-orange)]';
+                        } else if (log.name === 'process_preview_click') {
+                          details = `Viewed process / capability: "${log.properties?.title}" (${log.properties?.category})`;
+                          colorClass = 'text-purple-400';
+                        } else if (log.name === 'estimator_calculation') {
+                          details = `Calculated material estimation: ${log.properties?.estimatedWeight}kg for ${log.properties?.category} (${log.properties?.source})`;
+                          colorClass = 'text-blue-400';
+                        } else if (log.name === 'social_contact_click') {
+                          details = `Clicked social contact channel: "${log.properties?.platform}"`;
+                          colorClass = 'text-emerald-400';
+                        } else {
+                          details = `${log.name} triggered: ${JSON.stringify(log.properties)}`;
+                        }
+                        return (
+                          <p key={log.id} className={colorClass}>
+                            <span className="text-[var(--text-steel)]">[{timeStr}]</span> &gt; {details}
+                          </p>
+                        );
+                      })
+                    )}
                   </div>
                 </div>
               </div>
@@ -387,25 +436,23 @@ export default function Dashboard() {
                         
                         {/* Line plot */}
                         <path 
-                          d="M 10 120 L 60 110 L 110 80 L 160 90 L 210 50 L 260 100 L 310 60" 
+                          d={pathD} 
                           fill="none" 
                           stroke="var(--color-orange)" 
                           strokeWidth="3" 
                         />
                         
                         {/* Dots */}
-                        <circle cx="10" cy="120" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
-                        <circle cx="60" cy="110" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
-                        <circle cx="110" cy="80" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
-                        <circle cx="160" cy="90" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
-                        <circle cx="210" cy="50" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
-                        <circle cx="260" cy="100" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
-                        <circle cx="310" cy="60" r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2" />
+                        {chartPoints.map((p, idx) => (
+                          <circle key={idx} cx={p.x} cy={p.y} r="4" fill="white" stroke="var(--color-orange)" strokeWidth="2">
+                            <title>{p.views} views</title>
+                          </circle>
+                        ))}
                       </svg>
                     </div>
 
                     <div className="flex justify-between text-[9px] font-heading text-[var(--text-steel)] mt-4 uppercase">
-                      {trafficHistory.map((t, idx) => <span key={idx}>{t.day}</span>)}
+                      {stats.weeklyTraffic.map((t, idx) => <span key={idx}>{t.day}</span>)}
                     </div>
                   </div>
 
@@ -416,7 +463,7 @@ export default function Dashboard() {
                     </span>
 
                     <div className="space-y-3">
-                      {clickData.map((item, idx) => (
+                      {stats.clickData.map((item, idx) => (
                         <div key={idx} className="space-y-1">
                           <div className="flex justify-between text-[10px] font-mono">
                             <span className="text-[var(--text-white)]">{item.name}</span>
@@ -557,6 +604,15 @@ export default function Dashboard() {
                           <span className="text-3xl font-bold text-white font-heading">₹{calculatedCost.toLocaleString('en-IN')}</span>
                         </div>
                       </div>
+
+                      {calculatedWeight > 0 && (
+                        <button
+                          onClick={handleEstimateTrack}
+                          className="w-full mt-6 bg-[var(--bg-dark)] hover:bg-[var(--bg-dark)]/85 text-[var(--color-orange)] border border-[var(--color-orange)]/35 hover:border-[var(--color-orange)] font-heading text-[10px] tracking-widest font-semibold py-2.5 cursor-pointer transition-all duration-300"
+                        >
+                          LOG ESTIMATE TO SYSTEM TERMINAL
+                        </button>
+                      )}
                     </div>
 
                     <div className="border-t border-[var(--color-border-light)] pt-4 mt-4">
@@ -608,20 +664,29 @@ export default function Dashboard() {
                   {/* Vercel Web Analytics Integration Guide */}
                   <div className="border border-[var(--color-border)] bg-[var(--bg-dark)] p-5 space-y-3">
                     <div className="flex items-center gap-2 text-cyan-400">
-                      <Activity className="w-5 h-5" />
-                      <h4 className="font-heading text-sm font-bold uppercase tracking-wider">Vercel Web Analytics Setup</h4>
+                      <CheckCircle2 className="w-5 h-5 text-green-400" />
+                      <h4 className="font-heading text-sm font-bold uppercase tracking-wider">Vercel Web Analytics: INSTALLED</h4>
                     </div>
 
                     <p className="text-xs text-[var(--text-steel-light)] leading-relaxed font-light font-body">
-                      Since your code is compiled directly on Vercel, you can view complete analytics about visitor counts, geography, and loaded tabs securely inside your Vercel panel without writing database models:
+                      Vercel Web Analytics is successfully installed via `@vercel/analytics` and active on the site layout. 
                     </p>
 
-                    <ol className="list-decimal pl-5 text-xs text-[var(--text-steel)] space-y-1.5 font-body leading-relaxed">
-                      <li>Go to your **Vercel Dashboard** and click on your project repository (**itsJ0ker/dkgmetalcraft**).</li>
-                      <li>Select the **Analytics** tab at the top.</li>
-                      <li>Click the button that says **Enable Web Analytics**.</li>
-                      <li>Vercel will immediately start tracking visitor details without placing cookies, fully compliant with GDPR.</li>
-                    </ol>
+                    <div className="bg-[var(--bg-panel)] p-3 border border-[var(--color-border)] text-xs text-[var(--text-steel)] space-y-2 font-mono">
+                      <p className="text-[var(--color-orange)] font-bold">CUSTOM EVENT SCHEMAS REGISTERED:</p>
+                      <ul className="list-disc pl-4 space-y-1 text-[10px]">
+                        <li><span className="text-white">page_view</span>: {"{ tab: string }"}</li>
+                        <li><span className="text-white">catalog_download</span>: {"{ file: string }"}</li>
+                        <li><span className="text-white">blueprint_submit</span>: {"{ category: string, ssGrade: string }"}</li>
+                        <li><span className="text-white">chatbot_query</span>: {"{ query: string }"}</li>
+                        <li><span className="text-white">process_preview_click</span>: {"{ category: string, title: string }"}</li>
+                        <li><span className="text-white">estimator_calculation</span>: {"{ source: string, category: string, ... }"}</li>
+                      </ul>
+                    </div>
+
+                    <p className="text-xs text-[var(--text-steel-light)] leading-relaxed font-light font-body pt-2">
+                      To view full traffic dashboards, geographical locations, and device types, log in to your Vercel Dashboard for project **itsJ0ker/dkgmetalcraft** and visit the **Analytics** tab.
+                    </p>
                   </div>
 
                   {/* Diagnostic details */}

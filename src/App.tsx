@@ -9,6 +9,8 @@ import About from './components/About';
 import Contact from './components/Contact';
 import AIChatbot from './components/AIChatbot';
 import Dashboard from './components/Dashboard';
+import { Analytics } from '@vercel/analytics/react';
+import { initializeAnalytics, trackEvent } from './utils/analytics';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -22,6 +24,11 @@ export default function App() {
   
   // High-fidelity spark system
   const sparksRef = useRef<Array<{ x: number; y: number; vx: number; vy: number; alpha: number; size: number; color: string }>>([]);
+
+  useEffect(() => {
+    initializeAnalytics();
+    trackEvent('page_view', { tab: 'home' });
+  }, []);
 
   useEffect(() => {
     const canvas = sparkCanvasRef.current;
@@ -105,6 +112,8 @@ export default function App() {
 
   const handleTabChange = (newTab: string) => {
     if (newTab === displayTab || isTransitioningRef.current) return;
+
+    trackEvent('page_view', { tab: newTab });
 
     isTransitioningRef.current = true;
     const shutter = shutterRef.current;
@@ -254,6 +263,7 @@ export default function App() {
 
       {/* Global Footer */}
       <Footer setActiveTab={handleTabChange} />
+      <Analytics />
     </div>
   );
 }

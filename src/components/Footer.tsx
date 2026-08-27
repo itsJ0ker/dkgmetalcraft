@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin, ShieldAlert, Award, Lock } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 
 interface FooterProps {
   setActiveTab: (tab: string) => void;
@@ -33,6 +34,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 href="https://instagram.com/dkgmetalcraft" 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('social_contact_click', { platform: 'Instagram' })}
                 className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#E1306C] hover:border-[#E1306C] hover:shadow-[0_0_15px_rgba(225,48,108,0.3)] hover:-translate-y-1 transition-all duration-300 group"
                 aria-label="Instagram"
               >
@@ -44,6 +46,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 href="https://facebook.com/dkgmetalcraft" 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('social_contact_click', { platform: 'Facebook' })}
                 className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#1877F2] hover:border-[#1877F2] hover:shadow-[0_0_15px_rgba(24,119,242,0.3)] hover:-translate-y-1 transition-all duration-300 group"
                 aria-label="Facebook"
               >
@@ -55,6 +58,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 href="https://wa.me/919899592920" 
                 target="_blank" 
                 rel="noopener noreferrer"
+                onClick={() => trackEvent('social_contact_click', { platform: 'WhatsApp' })}
                 className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#25D366] hover:border-[#25D366] hover:shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:-translate-y-1 transition-all duration-300 group"
                 aria-label="WhatsApp"
               >

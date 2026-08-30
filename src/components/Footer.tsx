@@ -43,7 +43,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 </svg>
               </a>
               <a 
-                href="https://facebook.com/dkgmetalcraft" 
+                href="https://www.facebook.com/share/1Hzu39EJMG/?mibextid=wwXIfr" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 onClick={() => trackEvent('social_contact_click', { platform: 'Facebook' })}
@@ -55,7 +55,7 @@ export default function Footer({ setActiveTab }: FooterProps) {
                 </svg>
               </a>
               <a 
-                href="https://wa.me/919899592920" 
+                href="https://wa.me/918595659171" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 onClick={() => trackEvent('social_contact_click', { platform: 'WhatsApp' })}
@@ -142,6 +142,9 @@ export default function Footer({ setActiveTab }: FooterProps) {
               <li className="flex gap-3 items-center">
                 <Phone className="w-5 h-5 text-[var(--color-orange)] shrink-0" />
                 <div className="flex flex-col">
+                  <a href="tel:+918595659171" className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] font-bold text-decoration-none">
+                    +91-8595659171 (Primary)
+                  </a>
                   <a href="tel:+919899592920" className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] text-decoration-none">
                     +91-9899592920
                   </a>

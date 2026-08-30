@@ -133,7 +133,7 @@ ${catalogText}
       setMessages(prev => [...prev, { sender: 'bot', text: aiResponseText, timestamp: new Date() }]);
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { sender: 'bot', text: "⚠️ Network Error: Unable to connect to AI core. Please call us at +91-9899592920 for immediate assistance.", timestamp: new Date() }]);
+      setMessages(prev => [...prev, { sender: 'bot', text: "⚠️ Network Error: Unable to connect to AI core. Please call us at +91-8595659171 for immediate assistance.", timestamp: new Date() }]);
     } finally {
       setIsTyping(false);
     }
@@ -149,7 +149,7 @@ ${catalogText}
 
       {/* WhatsApp Button */}
       <a
-        href="https://wa.me/919899592920"
+        href="https://wa.me/918595659171"
         target="_blank"
         rel="noopener noreferrer"
         className="p-3.5 rounded-full bg-[#25D366]/10 backdrop-blur-md text-[#25D366] shadow-[0_0_15px_rgba(37,211,102,0.2)] hover:shadow-[0_0_25px_rgba(37,211,102,0.6)] hover:-translate-y-1 transition-all duration-300 border border-[#25D366]/50 flex items-center justify-center group relative"
@@ -165,7 +165,7 @@ ${catalogText}
 
       {/* Call Button */}
       <a
-        href="tel:+919899592920"
+        href="tel:+918595659171"
         className="p-3.5 rounded-full bg-[#00A3FF]/10 backdrop-blur-md text-[#00A3FF] shadow-[0_0_15px_rgba(0,163,255,0.2)] hover:shadow-[0_0_25px_rgba(0,163,255,0.6)] hover:-translate-y-1 transition-all duration-300 border border-[#00A3FF]/50 flex items-center justify-center group relative"
         aria-label="Call Us"
       >

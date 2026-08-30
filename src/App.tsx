@@ -23,7 +23,18 @@ export default function App() {
   const animationFrameRef = useRef<number | null>(null);
   
   // High-fidelity spark system
-  const sparksRef = useRef<Array<{ x: number; y: number; vx: number; vy: number; alpha: number; size: number; color: string }>>([]);
+  const sparksRef = useRef<Array<{
+    x: number;
+    y: number;
+    prevX: number;
+    prevY: number;
+    vx: number;
+    vy: number;
+    life: number;
+    decay: number;
+    size: number;
+    gravity: number;
+  }>>([]);
 
   useEffect(() => {
     initializeAnalytics();
@@ -55,45 +66,77 @@ export default function App() {
     const laser = laserBeamRef.current;
     if (laser && isTransitioningRef.current) {
       const rect = laser.getBoundingClientRect();
-      // Generate sparks from the middle of the laser if it's currently on screen
+      // Generate sparks around the middle of the laser guide on screen
       if (rect.x > -10 && rect.x < canvas.width + 10) {
-        // High density sparks
-        for (let i = 0; i < 8; i++) {
-          const angle = (Math.random() * Math.PI) - (Math.PI / 2); // Random angle
-          const speed = Math.random() * 8 + 4;
+        // High density realistic sparks spray
+        for (let i = 0; i < 12; i++) {
+          const angle = (Math.random() * Math.PI) - (Math.PI / 2); // outward angles
+          const speed = Math.random() * 11 + 5; // realistic high velocity
+          const sparkY = canvas.height / 2 + (Math.random() * 70 - 35); // spread near center cutting head
           sparksRef.current.push({
-            x: rect.x + 2, // Center of the 4px beam
-            y: canvas.height / 2 + (Math.random() * 60 - 30), // Spread out more along the cutting head
-            vx: Math.cos(angle) * speed * (Math.random() > 0.5 ? 1 : -1), // Explode left and right
-            vy: (Math.random() - 0.9) * 10, // Fast upward and outward movement
-            alpha: 1,
-            size: Math.random() * 4 + 1.5,
-            color: Math.random() > 0.4 ? '#ff5200' : (Math.random() > 0.5 ? '#ffea00' : '#ffffff') // Orange, yellow, and hot white
+            x: rect.x + 2,
+            y: sparkY,
+            prevX: rect.x + 2,
+            prevY: sparkY,
+            vx: Math.cos(angle) * speed * (Math.random() > 0.45 ? 1 : -1),
+            vy: (Math.random() - 0.8) * 8, // upward and outward dispersion
+            life: 1.0,
+            decay: Math.random() * 0.02 + 0.015, // random duration per spark
+            size: Math.random() * 2.5 + 1.2,
+            gravity: Math.random() * 0.15 + 0.15 // simulate physical gravity
           });
         }
       }
     }
 
-    // Draw existing sparks
+    // Draw & update existing sparks
     sparksRef.current.forEach((spark, index) => {
+      // Store previous position for motion blur vector trail
+      spark.prevX = spark.x;
+      spark.prevY = spark.y;
+
+      // Update positions with friction/gravity
       spark.x += spark.vx;
       spark.y += spark.vy;
-      spark.vy += 0.25; // Stronger gravity for realistic metal arcs
-      spark.alpha -= 0.015;
+      spark.vy += spark.gravity;
 
-      if (spark.alpha <= 0) {
+      // Decay life
+      spark.life -= spark.decay;
+
+      if (spark.life <= 0) {
         sparksRef.current.splice(index, 1);
         return;
       }
 
+      // Calculate dynamic color representing cooling stages of hot iron
+      let strokeColor = '';
+      if (spark.life > 0.75) {
+        // White-hot steel spark
+        strokeColor = `rgba(255, 255, 255, ${spark.life})`;
+      } else if (spark.life > 0.45) {
+        // Bright dazzling golden-yellow spark
+        strokeColor = `rgba(255, 215, 0, ${spark.life})`;
+      } else if (spark.life > 0.2) {
+        // Hot orange-red spark
+        strokeColor = `rgba(255, 100, 20, ${spark.life})`;
+      } else {
+        // Cooling deep red spark
+        strokeColor = `rgba(200, 30, 20, ${spark.life})`;
+      }
+
       ctx.save();
-      ctx.globalAlpha = spark.alpha;
-      ctx.shadowBlur = 15;
-      ctx.shadowColor = spark.color;
+      // Add subtle bloom matching spark temperature
+      ctx.shadowBlur = spark.life > 0.5 ? 8 : 2;
+      ctx.shadowColor = strokeColor;
+      
+      // Draw as a vector trail line to simulate motion blur
       ctx.beginPath();
-      ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2);
-      ctx.fillStyle = spark.color;
-      ctx.fill();
+      ctx.moveTo(spark.prevX, spark.prevY);
+      ctx.lineTo(spark.x, spark.y);
+      ctx.strokeStyle = strokeColor;
+      ctx.lineWidth = spark.size;
+      ctx.lineCap = 'round';
+      ctx.stroke();
       ctx.restore();
     });
 
@@ -188,7 +231,7 @@ export default function App() {
         ease: 'power4.inOut'
       })
       .to(laser, {
-        x: '100%',
+        x: '105%',
         duration: 0.7,
         ease: 'power4.inOut',
         opacity: 0

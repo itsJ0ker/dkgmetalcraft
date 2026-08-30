@@ -136,6 +136,7 @@ export default function Contact() {
                   <div>
                     <h4 className="text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-1">TELEPHONE HOTLINE</h4>
                     <div className="flex flex-col gap-1 font-body text-[var(--text-white)]">
+                      <a href="tel:+918595659171" className="hover:text-[var(--color-orange)] transition-colors font-bold">+91-8595659171 (Primary)</a>
                       <a href="tel:+919899592920" className="hover:text-[var(--color-orange)] transition-colors">+91-9899592920</a>
                       <a href="tel:+919873667806" className="hover:text-[var(--color-orange)] transition-colors">+91-9873667806</a>
                       <a href="tel:01145019426" className="hover:text-[var(--color-orange)] transition-colors">011 45019426</a>
@@ -169,7 +170,7 @@ export default function Contact() {
                       </svg>
                     </a>
                     <a 
-                      href="https://facebook.com/dkgmetalcraft" 
+                      href="https://www.facebook.com/share/1Hzu39EJMG/?mibextid=wwXIfr" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#1877F2] hover:border-[#1877F2] hover:shadow-[0_0_15px_rgba(24,119,242,0.3)] hover:-translate-y-1 transition-all duration-300 group bg-[var(--bg-dark)]"
@@ -180,7 +181,7 @@ export default function Contact() {
                       </svg>
                     </a>
                     <a 
-                      href="https://wa.me/919899592920" 
+                      href="https://wa.me/918595659171" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#25D366] hover:border-[#25D366] hover:shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:-translate-y-1 transition-all duration-300 group bg-[var(--bg-dark)]"

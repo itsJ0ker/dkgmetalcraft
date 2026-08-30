@@ -17,42 +17,48 @@ export default function Capabilities() {
       title: "Laser Cutting",
       description: "Precision laser cutting helps us produce accurate shapes, patterns, components, and sheet-metal parts with consistent quality.",
       technical: "High-precision cutting up to 12mm thickness with minimal kerf width. Perfect edge finish requiring zero secondary deburring.",
-      spec: "Tolerance: ±0.1mm"
+      spec: "Tolerance: ±0.1mm",
+      video: "/assets/Laser_cutting.mov"
     },
     {
       icon: <Layers className="w-6 h-6 text-[var(--color-orange)]" />,
       title: "Sheet Bending",
       description: "Our bending capabilities allow us to manufacture accurately shaped components, cabinets, counters, tables, panels, and customised metal structures.",
       technical: "Multi-axis CNC bending presses ensure accurate folding angles and repeatable dimensions across short and long production runs.",
-      spec: "Angles: 15° to 175°"
+      spec: "Angles: 15° to 175°",
+      video: "/assets/Bending.mov"
     },
     {
       icon: <Hammer className="w-6 h-6 text-[var(--color-orange)]" />,
       title: "Metal Fabrication",
       description: "We carry out fabrication work for a variety of commercial and industrial applications, focusing on structural strength and clean workmanship.",
       technical: "Complete integration of metal elements, structural columns, commercial worktops, custom enclosures, and heavy-duty industrial framing.",
-      spec: "Load Capacity: Heavy Duty"
+      spec: "Load Capacity: Heavy Duty",
+      video: "/assets/polishing.mov" // representing custom polishing on fabricated elements
     },
     {
       icon: <Activity className="w-6 h-6 text-[var(--color-orange)]" />,
       title: "Welding & Assembly",
       description: "Our fabrication process includes careful welding and assembly to ensure product durability, stability, and long-term performance.",
       technical: "High-integrity TIG, MIG, and spot welding specializing in stainless steel. Clean finishing techniques ensure sanitary culinary welds.",
-      spec: "Finish: Food-grade sanitary"
+      spec: "Finish: Food-grade sanitary",
+      video: "/assets/Tig_welding.mov"
     },
     {
       icon: <Cpu className="w-6 h-6 text-[var(--color-orange)]" />,
       title: "Power Press Work",
       description: "We can manufacture and process selected metal components according to production and design requirements.",
       technical: "Stamping, punching, and forming press capabilities for mass component fabrication with uniform geometric accuracy.",
-      spec: "Tooling: Custom die-press"
+      spec: "Tooling: Custom die-press",
+      video: "/assets/16895d58-e3a6-41b1-99df-ad01a11a620b.mov"
     },
     {
       icon: <Disc className="w-6 h-6 text-[var(--color-orange)]" />,
       title: "Pipe Bending & Rolling",
       description: "Our capabilities also include pipe bending and rolling for the manufacturing of frames, structures, stands, and customised metal products.",
       technical: "Precision mandrel and roll bending of pipes/tubing to make frames, commercial kitchen legs, supports, and modular structural parts.",
-      spec: "Diameters: 0.5\" to 3\""
+      spec: "Diameters: 0.5\" to 3\"",
+      video: "/assets/Bending.mov"
     }
   ];
 
@@ -166,20 +172,20 @@ export default function Capabilities() {
           {/* Right panel: Cinematic Video Backdrop & Live Details */}
           <div className="lg:col-span-5 flex flex-col justify-between bg-[var(--bg-panel)] border border-[var(--color-border)] relative overflow-hidden p-8 min-h-[450px]">
             {/* Ambient Background Video */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 bg-black/60">
               <video
                 key={activeCap} // refresh video loop context on active capability change
-                className="w-full h-full object-cover opacity-20 saturate-[0.1]"
-                src="/assets/14bfd6dd-29bb-4907-91c6-326c3880334f.mov"
+                className="w-full h-full object-cover opacity-45 saturate-[1.4] contrast-[1.1] brightness-[1.05]"
+                src={capabilities[activeCap].video}
                 autoPlay
                 muted
                 loop
                 playsInline
               >
-                <source src="/assets/14bfd6dd-29bb-4907-91c6-326c3880334f.mov" type="video/mp4" />
+                <source src={capabilities[activeCap].video} type="video/mp4" />
               </video>
               {/* Overlay shading */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#131316] via-transparent to-[#131316]"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#131316] via-transparent to-[#131316] mix-blend-multiply"></div>
             </div>
 
             {/* Technical HUD Overlay Content */}

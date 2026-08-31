@@ -9,6 +9,7 @@ import Contact from './components/Contact';
 import AIChatbot from './components/AIChatbot';
 import Dashboard from './components/Dashboard';
 import ScreenSwitchOverlay from './components/ScreenSwitchOverlay';
+import SEO from './components/SEO';
 import { Analytics } from '@vercel/analytics/react';
 import { initializeAnalytics, trackEvent } from './utils/analytics';
 
@@ -68,6 +69,8 @@ export default function App() {
 
   return (
     <div className={`relative min-h-screen bg-[var(--bg-dark)] flex flex-col justify-between overflow-x-hidden ${theme === 'light' ? 'light-theme' : theme === 'colorful' ? 'colorful-theme' : ''}`}>
+      {/* Dynamic SEO Manager for Active Tab */}
+      <SEO activeTab={displayTab} />
 
       {/* 100% New High-Tech Screen Switch Transition Overlay (No Canvas Sparks) */}
       <ScreenSwitchOverlay

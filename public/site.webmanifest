@@ -1,0 +1,21 @@
+{
+  "name": "DKG Metal Craft Private Limited",
+  "short_name": "DKG Metalcraft",
+  "description": "Manufacturer of commercial kitchen equipment, stainless steel products, and customized metal fabrication solutions in Delhi, India.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "icons": [
+    {
+      "src": "/assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -17,6 +17,7 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [estimatedWeight, setEstimatedWeight] = useState<number | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -50,6 +51,7 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     trackEvent('blueprint_submit', {
       category: formData.category,
@@ -58,32 +60,42 @@ export default function Contact() {
     });
 
     const web3Key = import.meta.env.VITE_WEB3FORMS_KEY;
-    if (web3Key) {
-      try {
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            access_key: web3Key,
-            subject: `New DKG MetalCraft Blueprint from ${formData.name}`,
-            from_name: 'DKG Website Blueprint',
-            ...formData,
-            estimatedWeight: estimatedWeight ? `${estimatedWeight} KG` : 'Not calculated'
-          })
-        });
-        const result = await response.json();
-        if (result.success) {
-          console.log('Blueprint emailed successfully via Web3Forms');
-        }
-      } catch (err) {
-        console.error('Failed to email blueprint via Web3Forms:', err);
-      }
-    }
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: web3Key,
+          subject: `⚡ New DKG Blueprint Inquiry from ${formData.name} (${formData.company || 'Private Inquiry'})`,
+          from_name: 'DKG Metalcraft Web Portal',
+          botcheck: '', // honeypot
+          "Client Name": formData.name,
+          "Company Name": formData.company || 'Not specified',
+          "Email Address": formData.email,
+          "Phone Number": formData.phone,
+          "Equipment Category": formData.category,
+          "Stainless Steel Grade": formData.ssGrade,
+          "Custom Dimensions (L x W x H)": `${formData.length || 'N/A'}mm (L) x ${formData.width || 'N/A'}mm (W) x ${formData.height || '850'}mm (H)`,
+          "Estimated Mass": estimatedWeight ? `~${estimatedWeight} KG` : 'Not calculated',
+          "Design Specifications": formData.customDetails || 'Standard fabrication requirements'
+        })
+      });
 
-    setSubmitted(true);
+      const result = await response.json();
+      if (result.success) {
+        console.log('Blueprint successfully transmitted to DKG via Web3Forms');
+      } else {
+        console.warn('Web3Forms returned status:', result);
+      }
+    } catch (err) {
+      console.error('Error transmitting blueprint via Web3Forms:', err);
+    } finally {
+      setIsSubmitting(false);
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -92,7 +104,7 @@ export default function Contact() {
       <div className="absolute inset-0 bg-grid opacity-5 pointer-events-none"></div>
 
       <div className="container mx-auto px-4 relative z-10">
-        
+
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
           <span className="font-heading text-xs tracking-[0.3em] text-[var(--color-orange)] uppercase block mb-3">
@@ -107,14 +119,14 @@ export default function Contact() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          
+
           {/* Left panel: Info & Map */}
           <div className="lg:col-span-5 space-y-8">
-            
+
             {/* Quick Contact Info */}
             <div className="bg-[var(--bg-panel)] border border-[var(--color-border)] p-8 relative">
               <div className="absolute top-0 left-0 w-8 h-[2px] bg-[#ff5200]"></div>
-              
+
               <h3 className="font-heading text-lg font-bold text-[var(--text-white)] uppercase tracking-wider mb-6">
                 Direct Channels
               </h3>
@@ -158,9 +170,9 @@ export default function Contact() {
                 <div className="border-t border-[var(--color-border-light)] pt-6 mt-6">
                   <h4 className="text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-3">SOCIAL CONNECTIONS</h4>
                   <div className="flex items-center gap-3">
-                    <a 
-                      href="https://instagram.com/dkgmetalcraft" 
-                      target="_blank" 
+                    <a
+                      href="https://instagram.com/dkgmetalcraft"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#E1306C] hover:border-[#E1306C] hover:shadow-[0_0_15px_rgba(225,48,108,0.3)] hover:-translate-y-1 transition-all duration-300 group bg-[var(--bg-dark)]"
                       aria-label="Instagram"
@@ -169,9 +181,9 @@ export default function Contact() {
                         <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
                       </svg>
                     </a>
-                    <a 
-                      href="https://www.facebook.com/share/1Hzu39EJMG/?mibextid=wwXIfr" 
-                      target="_blank" 
+                    <a
+                      href="https://www.facebook.com/share/1Hzu39EJMG/?mibextid=wwXIfr"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#1877F2] hover:border-[#1877F2] hover:shadow-[0_0_15px_rgba(24,119,242,0.3)] hover:-translate-y-1 transition-all duration-300 group bg-[var(--bg-dark)]"
                       aria-label="Facebook"
@@ -180,9 +192,9 @@ export default function Contact() {
                         <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3.81l.59-4H14V7a1 1 0 0 1 1-1h3z"></path>
                       </svg>
                     </a>
-                    <a 
-                      href="https://wa.me/918595659171" 
-                      target="_blank" 
+                    <a
+                      href="https://wa.me/918595659171"
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-[var(--text-steel)] hover:text-[#25D366] hover:border-[#25D366] hover:shadow-[0_0_15px_rgba(37,211,102,0.3)] hover:-translate-y-1 transition-all duration-300 group bg-[var(--bg-dark)]"
                       aria-label="WhatsApp"
@@ -207,15 +219,15 @@ export default function Contact() {
                   <span className="font-heading text-[10px] tracking-widest text-[var(--text-steel)]">MUNDKA INDUSTRIAL METROPOLIS</span>
                 </div>
               </div>
-              
+
               <div className="relative z-10 bg-[var(--bg-dark)]/90 border border-[var(--color-border)] p-4 flex justify-between items-center">
                 <div>
                   <span className="font-heading text-[10px] text-[var(--text-white)] tracking-widest block font-bold">DKG METAL CRAFT</span>
                   <span className="text-[8px] text-[var(--text-steel)] tracking-widest block">Delhi, India</span>
                 </div>
-                <a 
-                  href="https://maps.google.com/?q=Plot+No.+24,+Village+Mundka,+New+Delhi-110041" 
-                  target="_blank" 
+                <a
+                  href="https://maps.google.com/?q=Plot+No.+24,+Village+Mundka,+New+Delhi-110041"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="font-heading text-[8px] tracking-widest text-[var(--color-orange)] border border-[var(--color-orange)]/30 hover:border-[var(--color-orange)] px-3 py-1.5 transition-all text-decoration-none"
                 >
@@ -229,7 +241,7 @@ export default function Contact() {
           {/* Right panel: Inquiry Builder Form */}
           <div className="lg:col-span-7 bg-[var(--bg-panel)] border border-[var(--color-border)] p-8 relative">
             <div className="absolute top-0 right-0 w-[4px] h-[4px] bg-[#ff5200]"></div>
-            
+
             <h3 className="font-heading text-lg font-bold text-[var(--text-white)] uppercase tracking-wider mb-6 flex items-center gap-3">
               <Calculator className="w-5 h-5 text-[var(--color-orange)]" />
               <span>Project Blueprint & Inquiry Builder</span>
@@ -253,13 +265,13 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-2">FULL NAME *</label>
-                    <input 
-                      type="text" 
-                      name="name" 
+                    <input
+                      type="text"
+                      name="name"
                       required
                       value={formData.name}
                       onChange={handleInputChange}
@@ -269,9 +281,9 @@ export default function Contact() {
                   </div>
                   <div>
                     <label className="block text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-2">COMPANY NAME</label>
-                    <input 
-                      type="text" 
-                      name="company" 
+                    <input
+                      type="text"
+                      name="company"
                       value={formData.company}
                       onChange={handleInputChange}
                       className="w-full bg-[var(--bg-dark)] border border-[var(--color-border)] text-[var(--text-white)] p-3 text-xs outline-none focus:border-[var(--color-orange)] transition-colors"
@@ -283,9 +295,9 @@ export default function Contact() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-2">EMAIL ADDRESS *</label>
-                    <input 
-                      type="email" 
-                      name="email" 
+                    <input
+                      type="email"
+                      name="email"
                       required
                       value={formData.email}
                       onChange={handleInputChange}
@@ -295,9 +307,9 @@ export default function Contact() {
                   </div>
                   <div>
                     <label className="block text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-2">PHONE NUMBER *</label>
-                    <input 
-                      type="tel" 
-                      name="phone" 
+                    <input
+                      type="tel"
+                      name="phone"
                       required
                       value={formData.phone}
                       onChange={handleInputChange}
@@ -345,12 +357,12 @@ export default function Contact() {
                 {/* Dimensions section */}
                 <div className="space-y-4">
                   <h4 className="text-[10px] font-heading tracking-widest text-[var(--text-white)] uppercase">CUSTOM METRIC DIMENSIONS (Optional, in mm)</h4>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
-                      <input 
-                        type="number" 
-                        name="length" 
+                      <input
+                        type="number"
+                        name="length"
                         value={formData.length}
                         onChange={handleInputChange}
                         className="w-full bg-[var(--bg-dark)] border border-[var(--color-border)] text-[var(--text-white)] p-3 text-xs outline-none focus:border-[var(--color-orange)]"
@@ -358,9 +370,9 @@ export default function Contact() {
                       />
                     </div>
                     <div>
-                      <input 
-                        type="number" 
-                        name="width" 
+                      <input
+                        type="number"
+                        name="width"
                         value={formData.width}
                         onChange={handleInputChange}
                         className="w-full bg-[var(--bg-dark)] border border-[var(--color-border)] text-[var(--text-white)] p-3 text-xs outline-none focus:border-[var(--color-orange)]"
@@ -368,9 +380,9 @@ export default function Contact() {
                       />
                     </div>
                     <div>
-                      <input 
-                        type="number" 
-                        name="height" 
+                      <input
+                        type="number"
+                        name="height"
                         value={formData.height}
                         onChange={handleInputChange}
                         className="w-full bg-[var(--bg-dark)] border border-[var(--color-border)] text-[var(--text-white)] p-3 text-xs outline-none focus:border-[var(--color-orange)]"
@@ -378,7 +390,7 @@ export default function Contact() {
                       />
                     </div>
                   </div>
-                  
+
                   {estimatedWeight !== null && (
                     <div className="text-[10px] font-heading text-[var(--color-orange)] tracking-widest bg-[var(--color-orange-glow)] border border-[var(--color-orange)]/20 p-2.5 flex justify-between">
                       <span>ESTIMATED SHEET SHEAR MASS:</span>
@@ -401,10 +413,20 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="btn-industrial btn-industrial-primary w-full flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isSubmitting}
+                  className="btn-industrial btn-industrial-primary w-full flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" />
-                  <span>TRANSMIT PROJECT BLUEPRINT</span>
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>TRANSMITTING BLUEPRINT...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>TRANSMIT PROJECT BLUEPRINT</span>
+                    </>
+                  )}
                 </button>
               </form>
             )}

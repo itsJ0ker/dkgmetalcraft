@@ -135,9 +135,14 @@ export default function Footer({ setActiveTab }: FooterProps) {
             <ul className="space-y-4 text-sm">
               <li className="flex gap-3 items-start">
                 <MapPin className="w-5 h-5 text-[var(--color-orange)] shrink-0 mt-0.5" />
-                <span>
+                <a
+                  href="https://maps.app.goo.gl/ctqbLwJzM8TAAdMt7?g_st=ic"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--text-white)] transition-colors duration-300 text-[var(--text-steel)] text-decoration-none"
+                >
                   Kh. No. 93/24, Ground Floor, Plot No. 24, Village Mundka, New Delhi-110041, India
-                </span>
+                </a>
               </li>
               <li className="flex gap-3 items-center">
                 <Phone className="w-5 h-5 text-[var(--color-orange)] shrink-0" />

@@ -136,10 +136,15 @@ export default function Contact() {
                   <MapPin className="w-5 h-5 text-[var(--color-orange)] shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-1">FACTORY HEADQUARTERS</h4>
-                    <p className="text-[var(--text-white)] font-body leading-relaxed">
+                    <a
+                      href="https://maps.app.goo.gl/ctqbLwJzM8TAAdMt7?g_st=ic"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[var(--text-white)] hover:text-[var(--color-orange)] font-body leading-relaxed transition-colors block text-decoration-none"
+                    >
                       Kh. No. 93/24, Ground Floor, Plot No. 24,<br />
                       Village Mundka, New Delhi-110041, India
-                    </p>
+                    </a>
                   </div>
                 </div>
 
@@ -208,30 +213,46 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Map Mockup */}
-            <div className="bg-[var(--bg-panel)] border border-[var(--color-border)] p-4 relative overflow-hidden aspect-video flex flex-col justify-end">
-              {/* Mock map imagery */}
-              <div className="absolute inset-0 bg-[var(--bg-panel-light)] opacity-40 bg-grid flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-12 h-12 rounded-full bg-[var(--color-orange-glow)] border border-[var(--color-orange)] flex items-center justify-center mx-auto mb-3 animate-ping">
-                    <MapPin className="w-6 h-6 text-[var(--color-orange)]" />
-                  </div>
-                  <span className="font-heading text-[10px] tracking-widest text-[var(--text-steel)]">MUNDKA INDUSTRIAL METROPOLIS</span>
+            {/* Interactive Live Google Maps Location Box */}
+            <div className="bg-[var(--bg-panel)] border border-[var(--color-border)] relative overflow-hidden rounded-none shadow-xl flex flex-col justify-between group min-h-[300px]">
+              {/* Embedded Google Map iframe */}
+              <iframe
+                title="DKG Metal Craft Factory Location Map"
+                src="https://maps.google.com/maps?q=Kh.+No.+93/24,+Plot+No.+24,+Village+Mundka,+New+Delhi-110041&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                className="w-full h-full border-0 absolute inset-0 opacity-80 group-hover:opacity-100 transition-all duration-500 min-h-[300px]"
+                loading="lazy"
+                allowFullScreen
+              ></iframe>
+
+              {/* Overlay Top Bar */}
+              <div className="relative z-10 p-3 bg-gradient-to-b from-[var(--bg-dark)]/90 to-transparent flex justify-between items-center pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[var(--color-orange)] animate-ping" />
+                  <span className="font-heading text-[10px] tracking-[0.2em] text-[var(--text-white)] uppercase font-bold drop-shadow-md">
+                    FACTORY LOCATION &bull; MUNDKA, DELHI
+                  </span>
                 </div>
               </div>
 
-              <div className="relative z-10 bg-[var(--bg-dark)]/90 border border-[var(--color-border)] p-4 flex justify-between items-center">
+              {/* Overlay Bottom Banner with direct link */}
+              <div className="relative z-10 p-4 bg-[var(--bg-dark)]/95 border-t border-[var(--color-border)] flex flex-col sm:flex-row gap-3 justify-between items-start sm:items-center backdrop-blur-md">
                 <div>
-                  <span className="font-heading text-[10px] text-[var(--text-white)] tracking-widest block font-bold">DKG METAL CRAFT</span>
-                  <span className="text-[8px] text-[var(--text-steel)] tracking-widest block">Delhi, India</span>
+                  <span className="font-heading text-[11px] text-[var(--text-white)] tracking-wider block font-bold uppercase">
+                    DKG METAL CRAFT PRIVATE LIMITED
+                  </span>
+                  <span className="text-[9px] text-[var(--text-steel)] tracking-widest block uppercase mt-0.5">
+                    Plot No. 24, Village Mundka, New Delhi-110041
+                  </span>
                 </div>
                 <a
-                  href="https://maps.google.com/?q=Plot+No.+24,+Village+Mundka,+New+Delhi-110041"
+                  href="https://maps.app.goo.gl/ctqbLwJzM8TAAdMt7?g_st=ic"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-heading text-[8px] tracking-widest text-[var(--color-orange)] border border-[var(--color-orange)]/30 hover:border-[var(--color-orange)] px-3 py-1.5 transition-all text-decoration-none"
+                  className="btn-industrial text-[10px] py-2 px-4 flex items-center gap-2 hover:scale-105 transition-transform shrink-0 border-[var(--color-orange)] text-[var(--color-orange)]"
+                  aria-label="Open location in Google Maps"
                 >
-                  OPEN MAPS
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>OPEN IN GOOGLE MAPS</span>
                 </a>
               </div>
             </div>

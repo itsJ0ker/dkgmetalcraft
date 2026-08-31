@@ -50,7 +50,7 @@ export default function Capabilities() {
       description: "We can manufacture and process selected metal components according to production and design requirements.",
       technical: "Stamping, punching, and forming press capabilities for mass component fabrication with uniform geometric accuracy.",
       spec: "Tooling: Custom die-press",
-      video: "/assets/16895d58-e3a6-41b1-99df-ad01a11a620b.mov"
+      video: "/assets/powerpress.mov"
     },
     {
       icon: <Disc className="w-6 h-6 text-[var(--color-orange)]" />,
@@ -102,15 +102,15 @@ export default function Capabilities() {
   }, []);
 
   return (
-    <section 
-      ref={sectionRef} 
+    <section
+      ref={sectionRef}
       className="relative min-h-screen bg-[var(--bg-dark)] py-24 border-b border-[var(--color-border)] overflow-hidden"
     >
       {/* Background Grid */}
       <div className="absolute inset-0 bg-grid opacity-5 pointer-events-none"></div>
 
       <div className="container mx-auto px-4 relative z-10">
-        
+
         {/* Section Header */}
         <div className="max-w-3xl mb-16 cap-title-reveal">
           <span className="font-heading text-xs tracking-[0.3em] text-[var(--color-orange)] uppercase block mb-3">
@@ -126,9 +126,9 @@ export default function Capabilities() {
 
         {/* Dynamic Dual Panel Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
-          
+
           {/* Left panel: Interactive capabilities list */}
-          <div 
+          <div
             ref={cardsContainerRef}
             className="lg:col-span-7 grid grid-cols-1 md:grid-cols-2 gap-6"
           >
@@ -139,15 +139,14 @@ export default function Capabilities() {
                   setActiveCap(index);
                   trackEvent('process_preview_click', { category: 'Capability Card', title: cap.title });
                 }}
-                className={`capability-card card-industrial cursor-pointer ${
-                  activeCap === index 
-                    ? 'border-[var(--color-orange)] shadow-[0_0_15px_rgba(255,82,0,0.15)] bg-[var(--bg-panel)]' 
+                className={`capability-card card-industrial cursor-pointer ${activeCap === index
+                    ? 'border-[var(--color-orange)] shadow-[0_0_15px_rgba(255,82,0,0.15)] bg-[var(--bg-panel)]'
                     : 'border-[var(--color-border)] opacity-80 hover:opacity-100'
-                }`}
+                  }`}
               >
                 {/* Corner details */}
                 <div className={`absolute top-0 right-0 w-[4px] h-[4px] ${activeCap === index ? 'bg-[#ff5200]' : 'bg-[#27272a]'}`}></div>
-                
+
                 <div className="flex items-center gap-4 mb-4">
                   <div className="p-3 bg-[var(--bg-panel-light)] border border-[var(--color-border)]">
                     {cap.icon}
@@ -156,7 +155,7 @@ export default function Capabilities() {
                     {cap.title}
                   </h3>
                 </div>
-                
+
                 <p className="text-xs text-[var(--text-steel)] font-body leading-relaxed mb-4">
                   {cap.description}
                 </p>
@@ -202,7 +201,7 @@ export default function Capabilities() {
               <h3 className="font-heading text-2xl font-bold text-[var(--text-white)] uppercase tracking-wider mb-4">
                 {capabilities[activeCap].title}
               </h3>
-              
+
               <div className="space-y-4 mb-8">
                 <div>
                   <h4 className="text-[10px] font-heading tracking-widest text-[var(--text-steel)] uppercase mb-1">
@@ -232,7 +231,7 @@ export default function Capabilities() {
               </div>
               <span>DKG SYSTEM RUNNING</span>
             </div>
-            
+
             {/* Top right cut corner detailing */}
             <div className="absolute top-0 right-0 w-8 h-8 border-b border-l border-[var(--color-border)] bg-[var(--bg-dark)] flex items-center justify-center">
               <div className="w-[4px] h-[4px] bg-[#ff5200]"></div>

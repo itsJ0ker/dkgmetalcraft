@@ -35,6 +35,19 @@ export default function Dashboard() {
   const [estHeight, setEstHeight] = useState('850');
   const [estUnderShelves, setEstUnderShelves] = useState(1);
 
+  // Live statistics state
+  const [stats, setStats] = useState(() => getAnalyticsSummary());
+  const [viewMode, setViewMode] = useState<'session' | 'combined'>('session');
+
+  // Listen to new events in real-time
+  useEffect(() => {
+    const handleUpdate = () => {
+      setStats(getAnalyticsSummary());
+    };
+    window.addEventListener('dkg_analytics_update', handleUpdate);
+    return () => window.removeEventListener('dkg_analytics_update', handleUpdate);
+  }, []);
+
   // Handle Authentication Login
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,19 +181,6 @@ export default function Dashboard() {
       </section>
     );
   }
-
-  // Live statistics state
-  const [stats, setStats] = useState(() => getAnalyticsSummary());
-  const [viewMode, setViewMode] = useState<'session' | 'combined'>('session');
-
-  // Listen to new events in real-time
-  useEffect(() => {
-    const handleUpdate = () => {
-      setStats(getAnalyticsSummary());
-    };
-    window.addEventListener('dkg_analytics_update', handleUpdate);
-    return () => window.removeEventListener('dkg_analytics_update', handleUpdate);
-  }, []);
 
   const handleEstimateTrack = () => {
     trackEvent('estimator_calculation', {
